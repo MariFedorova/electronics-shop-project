@@ -1,23 +1,24 @@
 """Здесь надо написать тесты с использованием pytest для модуля item."""
 from src.item import Item
+import pytest
 
-def test_calculate_total_price():
-    item1 = Item("Смартфон", 10000, 20)
-    item2 = Item("Ноутбук", 20000, 5)
+@pytest.fixture
+def test_item():
+    return Item("Смартфон", 10000, 20)
 
-
-    item1.calculate_total_price()
-    assert item1.price * item1.quantity == 200000
-    assert item2.price * item2.quantity == 100000
-
-    # устанавливаем новый уровень цен
-
-    # применяем скидку
-def test_apply_discount():
-    item1 = Item("Смартфон", 10000, 20)
-
-    item1.apply_discount()
-
-    assert item1.price == 8000.0
+def test_calculate_total_price(test_item):
+    test_item.calculate_total_price()
+    assert test_item.price * test_item.quantity == 200000
 
 
+def test_apply_discount(test_item):
+    test_item.apply_discount()
+    assert test_item.price == 8000
+def test_string_to_number():
+
+    assert Item.string_to_number('5.0') == 5
+
+def test_name(test_item):
+
+    test_item.name = 'СуперСмартфон'
+    assert test_item.name == 'СуперСмарт'
