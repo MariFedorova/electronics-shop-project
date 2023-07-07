@@ -2,10 +2,17 @@
 from src.item import Item
 import pytest
 
+from src.phone import Phone
+
 
 @pytest.fixture
 def test_item():
     return Item("Смартфон", 10000, 20)
+
+
+@pytest.fixture
+def test_phone():
+    return Phone("Смартфон", 100000, 20, 2)
 
 
 def test_calculate_total_price(test_item):
@@ -33,3 +40,7 @@ def test_repr(test_item):
 
 def test_str(test_item):
     assert str(test_item) == 'Смартфон'
+
+
+def test_add(test_phone, test_item):
+    assert test_phone + test_item == 40
