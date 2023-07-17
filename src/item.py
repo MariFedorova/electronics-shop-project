@@ -1,6 +1,14 @@
 import csv
 
 from abc import ABC, abstractmethod
+
+
+class InstantiateCSVError(Exception):
+    def __init__(self, message):
+        self.message = message
+        print(self.message)
+
+
 class Item:
     """
     Класс для представления товара в магазине.
@@ -20,7 +28,7 @@ class Item:
         self.__name = name
         self.price = price
         self.quantity = quantity
-        #self.all.append(self)
+        # self.all.append(self)
 
     def __repr__(self):
         return f"{self.__class__.__name__}('{self.__name}', {self.price}, {self.quantity})"
@@ -43,11 +51,16 @@ class Item:
 
     @classmethod
     def instantiate_from_csv(cls, filename):
-        with open(filename, "r", encoding="Windows-1251") as file:
-            reader = csv.DictReader(file, delimiter=',')
-            for row in reader:
-                new_item = cls(row.get('name'), int(row.get('price')), int(row.get('quantity')))
-                cls.all.append(new_item)
+        try:
+            with open(filename, "r", encoding="Windows-1251") as file:
+                reader = csv.DictReader(file, delimiter=',')
+                for row in reader:
+                    if len(row) != 3:
+                        raise InstantiateCSVError("Файл item.csv поврежден")
+                    new_item = cls(row.get('name'), int(row.get('price')), int(row.get('quantity')))
+                    cls.all.append(new_item)
+        except FileNotFoundError:
+            raise FileNotFoundError("Отсутствует файл item.csv")
 
     @staticmethod
     def string_to_number(data):
@@ -67,5 +80,4 @@ class Item:
         """
         self.price *= self.pay_rate
 
-
-#class Keybord():
+# class Keybord():
